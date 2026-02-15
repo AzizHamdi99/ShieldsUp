@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Send, Bot, User, Shield, Sparkles, RefreshCw } from "lucide-react"
+import { Send, Bot, User, Sparkles, RefreshCw } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -24,42 +24,6 @@ const SUGGESTIONS = [
   "What should I do if my account is hacked?",
 ]
 
-const KNOWLEDGE_BASE: Record<string, string> = {
-  phishing: "Phishing is a type of social engineering attack where attackers disguise themselves as a trustworthy entity to trick you into revealing sensitive information like passwords, credit card numbers, or personal data. Common signs include:\n\n- Urgent or threatening language (\"Your account will be closed!\")\n- Suspicious sender addresses (check for typos like paypa1.com)\n- Requests for personal information\n- Generic greetings (\"Dear Customer\")\n- Mismatched or suspicious links\n\nAlways verify the sender through official channels before clicking links or providing information.",
-
-  password: "A strong password is your first line of defense. Here are modern best practices:\n\n- Use passphrases: Combine 4+ random words (e.g., \"correct-horse-battery-staple\")\n- Make it long: Aim for 16+ characters\n- Use a password manager to generate and store unique passwords\n- Enable two-factor authentication (2FA) everywhere\n- Never reuse passwords across sites\n- Change passwords only when a breach is suspected (per NIST guidelines)\n\nThe key insight: Length beats complexity. A long passphrase is much harder to crack than a short complex password.",
-
-  vpn: "A VPN (Virtual Private Network) creates an encrypted tunnel between your device and the internet. Here is why it matters:\n\n- Encrypts your internet traffic so others on the same network cannot snoop\n- Essential on public Wi-Fi (coffee shops, airports, hotels)\n- Hides your browsing from your ISP\n- Protects against man-in-the-middle attacks\n\nWhen choosing a VPN:\n- Use reputable paid providers (free VPNs often sell your data)\n- Check their no-logging policy\n- Look for OpenVPN or WireGuard protocols\n- Avoid VPNs based in countries with strict data retention laws",
-
-  scam: "Spotting scam emails requires attention to detail. Look for these red flags:\n\n1. Sender address: Check the actual email domain, not just the display name\n2. Urgency: \"Act now!\" or \"Account will be suspended!\" are manipulation tactics\n3. Links: Hover (don't click) to see the real URL destination\n4. Attachments: Never open unexpected attachments, especially .exe, .zip, or macro-enabled documents\n5. Grammar: While not always reliable, poor grammar can indicate a scam\n6. Too good to be true: Prize notifications, unexpected refunds, or inheritance emails\n\nWhen in doubt, contact the supposed sender through their official website or phone number - never through the suspicious email.",
-
-  "two-factor": "Two-Factor Authentication (2FA) adds a second layer of security beyond your password. Types include:\n\n- Authenticator apps (Google Authenticator, Authy) - Recommended\n- Hardware security keys (YubiKey) - Most secure\n- SMS codes - Better than nothing, but vulnerable to SIM swapping\n- Email codes - Moderate security\n\nAlways enable 2FA on:\n- Email accounts (most critical - it is the key to all other accounts)\n- Banking and financial services\n- Social media accounts\n- Cloud storage services\n\n2FA blocks 99.9% of automated attacks, even if your password is compromised.",
-
-  hacked: "If you suspect your account has been hacked, act quickly:\n\n1. Change your password immediately (from a different, secure device if possible)\n2. Enable 2FA if not already active\n3. Check for unauthorized activity (sent emails, purchases, setting changes)\n4. Revoke access to all active sessions\n5. Check connected apps and remove suspicious ones\n6. Update passwords for any accounts using the same password\n7. Run an antivirus scan on your devices\n8. Monitor your accounts for further suspicious activity\n9. Report to the service provider\n10. If financial accounts are involved, contact your bank immediately\n\nPrevention: Use unique passwords everywhere and enable 2FA to minimize future risk.",
-
-  malware: "Malware is malicious software designed to damage or gain unauthorized access to systems. Common types:\n\n- Ransomware: Encrypts your files and demands payment\n- Trojans: Disguised as legitimate software\n- Worms: Self-replicating across networks\n- Spyware: Monitors your activity secretly\n- Keyloggers: Records your keystrokes\n- Rootkits: Hides deep in your OS for persistent access\n\nProtection tips:\n- Keep your OS and software updated\n- Use reputable antivirus software\n- Never download from untrusted sources\n- Be cautious with email attachments\n- Back up your data regularly (3-2-1 rule: 3 copies, 2 media types, 1 offsite)",
-
-  firewall: "A firewall monitors and controls incoming and outgoing network traffic based on security rules. Think of it as a bouncer for your network:\n\n- Blocks unauthorized access attempts\n- Filters traffic based on rules you define\n- Can be hardware (router-level) or software (OS-level)\n- Essential for both home and enterprise networks\n\nBest practices:\n- Enable your OS firewall (it is usually on by default)\n- Configure your router's built-in firewall\n- Use deny-all as the default inbound policy\n- Only allow traffic you specifically need\n- Regularly review and update firewall rules\n- Log dropped packets to monitor for threats",
-
-  encryption: "Encryption converts readable data into an unreadable format that can only be decoded with a key. It is fundamental to cybersecurity:\n\n- HTTPS: Encrypts web traffic (look for the padlock icon)\n- End-to-end encryption: Only sender and receiver can read messages (Signal, WhatsApp)\n- Full-disk encryption: Protects all data on your device (BitLocker, FileVault)\n- File encryption: Protects individual files and folders\n\nKey concepts:\n- Symmetric encryption: Same key to encrypt and decrypt (AES)\n- Asymmetric encryption: Public/private key pair (RSA)\n- Hashing: One-way transformation for passwords (bcrypt, Argon2)\n\nAlways use encrypted connections for sensitive data.",
-
-  default: "I am CyberBot, your cybersecurity learning assistant. I can help you with topics like:\n\n- Password security and best practices\n- Phishing detection and prevention\n- VPN and network safety\n- Malware identification and defense\n- Two-factor authentication\n- What to do if you are hacked\n- Encryption basics\n- Firewall configuration\n\nTry asking me a specific question about any of these topics, or click one of the suggested questions above."
-}
-
-function findResponse(input: string): string {
-  const lower = input.toLowerCase()
-  if (lower.includes("phish") || lower.includes("fake email") || lower.includes("suspicious email")) return KNOWLEDGE_BASE.phishing
-  if (lower.includes("password") || lower.includes("passphrase") || lower.includes("pass word")) return KNOWLEDGE_BASE.password
-  if (lower.includes("vpn") || lower.includes("virtual private")) return KNOWLEDGE_BASE.vpn
-  if (lower.includes("scam") || lower.includes("spam") || lower.includes("fake") || lower.includes("spot")) return KNOWLEDGE_BASE.scam
-  if (lower.includes("2fa") || lower.includes("two-factor") || lower.includes("two factor") || lower.includes("mfa") || lower.includes("authenticat")) return KNOWLEDGE_BASE["two-factor"]
-  if (lower.includes("hack") || lower.includes("breach") || lower.includes("compromis") || lower.includes("stolen")) return KNOWLEDGE_BASE.hacked
-  if (lower.includes("malware") || lower.includes("virus") || lower.includes("ransomware") || lower.includes("trojan") || lower.includes("worm") || lower.includes("spyware")) return KNOWLEDGE_BASE.malware
-  if (lower.includes("firewall") || lower.includes("fire wall")) return KNOWLEDGE_BASE.firewall
-  if (lower.includes("encrypt") || lower.includes("https") || lower.includes("ssl") || lower.includes("tls")) return KNOWLEDGE_BASE.encryption
-  return KNOWLEDGE_BASE.default
-}
-
 export default function ChatbotPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -77,9 +41,12 @@ export default function ChatbotPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  function handleSend(text?: string) {
+  async function handleSend(text?: string) {
     const msg = text || input.trim()
     if (!msg) return
+
+    console.log("\n=== DÉBUT ENVOI MESSAGE ===")
+    console.log("Message utilisateur:", msg)
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -88,22 +55,67 @@ export default function ChatbotPage() {
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
     setInput("")
     setIsTyping(true)
 
-    // Simulate typing delay
-    setTimeout(() => {
-      const response = findResponse(msg)
+    try {
+      const payloadMessages = updatedMessages
+        .filter((message) => message.id !== "welcome")
+        .map((message) => ({
+          role: message.role === "bot" ? "assistant" : "user",
+          content: message.content,
+        }))
+
+      console.log("Payload envoyé à /api/chat:", JSON.stringify(payloadMessages, null, 2))
+      console.log("URL de l'API:", "/api/chat")
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: payloadMessages }),
+      })
+
+      console.log(`Statut réponse: ${response.status} ${response.statusText}`)
+      
+      const data = await response.json()
+      console.log("Données reçues:", data)
+
+      if (!response.ok) {
+        console.log(`❌ Erreur HTTP ${response.status}:`, data.error)
+        throw new Error(data.error || `HTTP ${response.status}`)
+      }
+
+      console.log("✅ Réponse du bot:", data.reply?.substring(0, 100) + "...")
+
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
         role: "bot",
-        content: response,
+        content: data.reply || "I could not generate a response.",
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, botMessage])
+      
+    } catch (error) {
+      console.error("❌ Erreur dans handleSend:", error)
+      
+      let errorMessage = "Unable to contact the chatbot service right now."
+      if (error instanceof Error) {
+        errorMessage = `Error: ${error.message}`
+      }
+      
+      const botMessage: Message = {
+        id: `bot-${Date.now()}`,
+        role: "bot",
+        content: errorMessage,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, botMessage])
+    } finally {
       setIsTyping(false)
-    }, 800 + Math.random() * 700)
+      console.log("=== FIN ENVOI MESSAGE ===\n")
+    }
   }
 
   function handleClear() {

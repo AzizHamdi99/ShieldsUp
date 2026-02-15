@@ -2,7 +2,7 @@ import type { UserProgress, ChallengeResult, Badge, LeaderboardEntry } from './t
 
 const STORAGE_KEY = 'cyberquest_progress'
 
-const RANKS = [
+export const RANKS = [
   { name: 'Script Kiddie', minPoints: 0 },
   { name: 'Digital Cadet', minPoints: 100 },
   { name: 'Cyber Scout', minPoints: 300 },
@@ -15,7 +15,7 @@ const RANKS = [
   { name: 'Cyber Legend', minPoints: 5500 },
 ]
 
-const BADGE_DEFINITIONS: Omit<Badge, 'earnedAt'>[] = [
+export const BADGE_DEFINITIONS: Omit<Badge, 'earnedAt'>[] = [
   { id: 'first-challenge', name: 'First Steps', description: 'Complete your first challenge', icon: 'Footprints' },
   { id: 'perfect-score', name: 'Perfectionist', description: 'Get a perfect score on any challenge', icon: 'Star' },
   { id: 'streak-3', name: 'On Fire', description: 'Complete 3 challenges in a row', icon: 'Flame' },

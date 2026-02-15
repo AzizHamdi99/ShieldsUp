@@ -12,7 +12,7 @@ export async function GET() {
     // Map users to leaderboard entries with rank
     const leaderboard = users.map((user, idx) => ({
       rank: idx + 1,
-      displayName: user.name,
+      displayName: user.displayName,
       odisityPoints: user.odisityPoints || 0,
       completedChallenges: user.completedChallenges || 0,
       clerkId: user.clerkId,

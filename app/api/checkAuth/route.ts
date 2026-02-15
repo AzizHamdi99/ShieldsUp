@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     // Find or create user with clerkId
     const user = await User.findOneAndUpdate(
       { email },
-      { name, email, clerkId },
+      { displayName:name, email, clerkId },
       { new: true, upsert: true }
     );
 

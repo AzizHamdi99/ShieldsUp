@@ -6,7 +6,7 @@ const BadgeSchema = new Schema({
   description: { type: String },
   icon: { type: String },
   earnedAt: { type: String },
-});
+}); 
 
 const UserSchema = new Schema(
   {
